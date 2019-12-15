@@ -55,13 +55,13 @@ np.random.shuffle(data)
 reviewX = open('reviewSnippets.txt', "r",encoding='utf8')
 reviewY = open('reviewLabels.txt', "r",encoding='utf8')
 
-MRx = pd.read_csv(reviewX, sep='\n', header=None, dtype=str) #.values
+MRx = pd.read_csv(reviewX, sep='\n', header=None, dtype=str)
 MRy = pd.read_csv(reviewY, sep='\n', header=None, dtype=str)
 
 rX = MRx.values
 rY = MRy.iloc[::]
 
-#####Text Preprocessing techniques, using tfidf and countvectorizer
+#####Text Preprocessing techniques, using tfidf and countvectorizer (OLD)
 # tfidf = TfidfVectorizer(stop_words="english", lowercase=False, smooth_idf=False, sublinear_tf=True, use_idf=True, max_features=6550,) # ngram_range=(1,3)) #,max_df=0.1,) # max_features=65500)  
 # cv = CountVectorizer(stop_words="english", analyzer='word', ngram_range=(1,2))
 
@@ -84,20 +84,7 @@ dtc = tree.DecisionTreeClassifier()
 kf = StratifiedKFold(n_splits=5)
 linSVM = svm.LinearSVC()
 
-
-# svm3 = svm.SVC(kernel='linear', decision_function_shape='ovo',)
-# svm3 = svm.SVC(kernel='linear', decision_function_shape='ovo', shrinking=False, C= 1.7,) #Best
-
-svm3 = svm.SVC(kernel='linear', decision_function_shape='ovo', probability=True, class_weight='balanced' )
-
-# lr2 = LogisticRegression(solver='newton-cg', penalty='l2', class_weight='balanced', )
-
-# lr2 = LogisticRegression(solver="newton-cg", penalty='none', class_weight='balanced') #Best
-
-# lr2 = LogisticRegression(solver="sag", penalty='none', class_weight='balanced') #Best
-
-# lr2 = LogisticRegression(solver="liblinear")
-
+svm3 = svm.SVC(kernel='linear', decision_function_shape='ovo', C= 1.5)
 
 
 
@@ -112,31 +99,6 @@ def getScoretWithModel(model, x_train, x_test, y_train, y_test):
 ###################Train Test split 80/20, fits model and runs prediction returning score##################
 #############(or any model can be inserted as the first parameter in the getscorewithmodel method)###################
 
-# x_train, x_test, y_train, y_test = train_test_split(trecTrainX1, trecTrainY1, test_size=0.2, random_state=4)
-# DataTrainTF = cv.fit_transform(x_train)
-# DataTestTF = cv.transform(x_test)
-# print("Accuracy:", getScoretWithModel(lr, DataTrainTF, DataTestTF, y_train, y_test))
-
-# x_train, x_test, y_train, y_test = train_test_split(trecTrainX2, trecTrainY2, test_size=0.2, random_state=4)
-# DataTrainTF = cv.fit_transform(x_train)
-# DataTestTF = cv.transform(x_test)
-# print("Accuracy:", getScoretWithModel(svm, DataTrainTF, DataTestTF, y_train, y_test))
-
-
-
-
-
-# x_train, x_test, y_train, y_test = train_test_split(data[:,0], data[:,1], test_size=0.3, random_state=4)
-# DataTrainTF = tfidf1.fit_transform(x_train)
-# DataTestTF = tfidf1.transform(x_test)
-# print("Accuracy:", getScoretWithModel(svm, DataTrainTF, DataTestTF, y_train, y_test))
-
-# x_train, x_test, y_train, y_test = train_test_split(data[:,0], data[:,1], test_size=0.3, random_state=4)
-# DataTrainTF = tfidf1.fit_transform(x_train)
-# DataTestTF = tfidf1.transform(x_test)
-# print("Accuracy:", getScoretWithModel(svm1, DataTrainTF, DataTestTF, y_train, y_test))
-
-
 x_train, x_test, y_train, y_test = train_test_split(data[:,0], data[:,1], test_size=0.3, random_state=4)
 DataTrainTF = tfidf2.fit_transform(x_train)
 DataTestTF = tfidf2.transform(x_test)
@@ -147,7 +109,4 @@ DataTrainTF = tfidf2.fit_transform(x_train)
 DataTestTF = tfidf2.transform(x_test)
 print("SVM Accuracy:", getScoretWithModel(svm3, DataTrainTF, DataTestTF, y_train, y_test))
 
-# x_train, x_test, y_train, y_test = train_test_split(trecTrainX2, trecTrainY2, test_size=0.2, random_state=4)
-# DataTrainTF = tfidf2.fit_transform(x_train)
-# DataTestTF = tfidf2.transform(x_test)
-# print("MNB Accuracy:", getScoretWithModel(multiNB, DataTrainTF, DataTestTF, y_train, y_test))
+
